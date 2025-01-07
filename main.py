@@ -44,3 +44,6 @@ if uploaded_file:
         plt.title("Length Frequency Distribution")
         st.pyplot(plt)
 
+git add lunkerai_web_app.py
+git commit -m "Added main Streamlit app file"
+git push origin main
