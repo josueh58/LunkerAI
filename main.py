@@ -52,6 +52,9 @@ if uploaded_file:
                                      axis=1)
     df["Relative Weight"] = df[weight_column] / df["Standard Weight"] * 100
 
+    # Handle NaN values in Relative Weight
+    df["Relative Weight"] = df["Relative Weight"].fillna(0)
+
     # CPUE Calculation (Effort summed per unique Net ID)
     if st.button("Calculate CPUE"):
         species_counts = df[species_column].value_counts().reset_index()
@@ -70,7 +73,7 @@ if uploaded_file:
             Range_TL=(length_column, lambda x: f"{x.min()}-{x.max()}"),
             Mean_WT=(weight_column, 'mean'),
             Range_WT=(weight_column, lambda x: f"{x.min()}-{x.max()}"),
-            Mean_Wr=("Relative Weight", 'mean')
+            Mean_Wr=("Relative Weight", lambda x: round(x.mean(), 2))
         ).reset_index()
         species_abundance["CPUE Fish/Hr"] = species_abundance["CPUE_Fish_Hr"] / effort_total
         species_abundance = species_abundance.drop(columns=["CPUE_Fish_Hr"])
