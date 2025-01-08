@@ -67,7 +67,7 @@ if uploaded_file:
     if st.button("Calculate Species Abundance"):
         total_fish = len(df)
         species_abundance = df.groupby(species_column).agg(
-            CPUE_Fish_Hr=(species_column, 'count'),
+            Fish_Count=(species_column, 'count'),
             Mean_TL_inches=(length_column, lambda x: round(x.mean() / 25.4, 2)),
             Mean_TL=(length_column, 'mean'),
             Range_TL=(length_column, lambda x: f"{x.min()}-{x.max()}"),
@@ -75,8 +75,7 @@ if uploaded_file:
             Range_WT=(weight_column, lambda x: f"{x.min()}-{x.max()}"),
             Mean_Wr=("Relative Weight", lambda x: round(x.mean(), 2))
         ).reset_index()
-        species_abundance["CPUE Fish/Hr"] = species_abundance["CPUE_Fish_Hr"] / effort_total
-        species_abundance = species_abundance.drop(columns=["CPUE_Fish_Hr"])
+        species_abundance["CPUE Fish/Hr"] = species_abundance["Fish_Count"] / effort_total
         species_abundance = species_abundance.sort_values(by="CPUE Fish/Hr", ascending=False)
         st.write("### Species Abundance:")
         st.dataframe(species_abundance)
