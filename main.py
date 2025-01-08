@@ -21,9 +21,11 @@ if uploaded_file:
     weight_column = st.selectbox("Select Fish Weight Column:", df.columns)
     net_id_column = st.selectbox("Select Net ID Column:", df.columns)
 
+    # Automatically compute total effort as the sum of unique net efforts
+    effort_total = df.groupby(net_id_column)[effort_column].first().sum()
+
     # CPUE Calculation (Effort summed per unique Net ID)
     if st.button("Calculate CPUE"):
-        effort_total = df[[net_id_column, effort_column]].drop_duplicates()[effort_column].sum()
         species_counts = df[species_column].value_counts().reset_index()
         species_counts.columns = ["Species", "Fish Count"]
         species_counts["CPUE Fish/Hr"] = species_counts["Fish Count"] / effort_total
@@ -56,4 +58,3 @@ if uploaded_file:
         plt.ylabel("Frequency")
         plt.title("Length Frequency Distribution")
         st.pyplot(plt)
-
